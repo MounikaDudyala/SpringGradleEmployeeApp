@@ -20,11 +20,10 @@ public class EmployeeDaoImpl extends AbstractDBConnection implements EmployeeDao
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection conn = getConnection();
-			PreparedStatement pstmt = conn.prepareStatement("insert into Employee values(?,?,?,?)");
-			pstmt.setString(1, emp.getEmployeeId());
-			pstmt.setString(2, emp.getFirstName());
-			pstmt.setString(3, emp.getLastName());
-			pstmt.setString(4, emp.getManagerId());
+			PreparedStatement pstmt = conn.prepareStatement("insert into employee(FirstName,LastName,ManagerId) values(?,?,?)");
+			pstmt.setString(1, emp.getFirstName());
+			pstmt.setString(2, emp.getLastName());
+			pstmt.setInt(3, emp.getManagerId());
 			int i = pstmt.executeUpdate();
 			if (i == 1)
 				return true;
@@ -39,19 +38,19 @@ public class EmployeeDaoImpl extends AbstractDBConnection implements EmployeeDao
 		return false;
 	}
 
-	public Employee fetchEmployee(String empId) {
+	public Employee fetchEmployee(int empId) {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection conn = getConnection();
-			PreparedStatement pstmt = conn.prepareStatement("select * from Employee where empId=?");
-			pstmt.setString(1, empId);
+			PreparedStatement pstmt = conn.prepareStatement("select * from employee where empId=?");
+			pstmt.setInt(1, empId);
 			ResultSet rs = pstmt.executeQuery();
 			Employee emp = new Employee();
 			while (rs.next()) {
-				emp.setEmployeeId(rs.getString(1));
+				emp.setEmpId(rs.getInt(1));
 				emp.setFirstName(rs.getString(2));
 				emp.setLastName(rs.getString(3));
-				emp.setManagerId(rs.getString(4));
+				emp.setManagerId(rs.getInt(4));
 			}
 
 			return emp;
@@ -70,15 +69,15 @@ public class EmployeeDaoImpl extends AbstractDBConnection implements EmployeeDao
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection conn = getConnection();
 			Statement st = conn.createStatement();
-			String query = "select * from Employee";
+			String query = "select * from employee";
 			ResultSet rs = st.executeQuery(query);
 			List<Employee> list = new ArrayList<Employee>();
 			while (rs.next()) {
 				Employee emp = new Employee();
-				emp.setEmployeeId(rs.getString(1));
+				emp.setEmpId(rs.getInt(1));
 				emp.setFirstName(rs.getString(2));
 				emp.setLastName(rs.getString(3));
-				emp.setManagerId(rs.getString(4));
+				emp.setManagerId(rs.getInt(4));
 				list.add(emp);
 			}
 
@@ -93,12 +92,12 @@ public class EmployeeDaoImpl extends AbstractDBConnection implements EmployeeDao
 		return null;
 	}
 
-	public boolean deleteEmployee(String empId) {
+	public boolean deleteEmployee(int empId) {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection conn = getConnection();
-			PreparedStatement pstmt = conn.prepareStatement("delete from Employee where empId=?");
-			pstmt.setString(1, empId);
+			PreparedStatement pstmt = conn.prepareStatement("delete from employee where empId=?");
+			pstmt.setInt(1, empId);
 			int i = pstmt.executeUpdate();
 			if (i == 1)
 				return true;
@@ -117,13 +116,11 @@ public class EmployeeDaoImpl extends AbstractDBConnection implements EmployeeDao
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection conn = getConnection();
-			PreparedStatement pstmt = conn
-					.prepareStatement("update Employee set empId=?,FirstName=?,LastName=?,ManagerId=? where EmpId=?");
-			pstmt.setString(1, emp.getEmployeeId());
-			pstmt.setString(2, emp.getFirstName());
-			pstmt.setString(3, emp.getLastName());
-			pstmt.setString(4, emp.getManagerId());
-			pstmt.setString(5, emp.getEmployeeId());
+			PreparedStatement pstmt = conn.prepareStatement("update employee set FirstName=?,LastName=?,ManagerId=? where EmpId=?");
+			pstmt.setString(1, emp.getFirstName());
+			pstmt.setString(2, emp.getLastName());
+			pstmt.setInt(3, emp.getManagerId());
+			pstmt.setInt(4, emp.getEmpId());
 			int i = pstmt.executeUpdate();
 			if (i == 0) {
 				return false;

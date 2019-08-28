@@ -23,7 +23,7 @@ public class EmployeeService {
 		return is_employee_created;
 	}
 
-	public Employee fetchEmployee(String empId) {
+	public Employee fetchEmployee(int empId) {
 		Employee emp = employeeDao.fetchEmployee(empId);
 		return emp;
 	}
@@ -33,7 +33,7 @@ public class EmployeeService {
 		return is_employee_updated;
 	}
 
-	public boolean deleteEmployee(String empId) {
+	public boolean deleteEmployee(int empId) {
 		boolean is_employee_deleted = employeeDao.deleteEmployee(empId);
 		return is_employee_deleted;
 	}
